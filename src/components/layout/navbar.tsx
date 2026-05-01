@@ -102,7 +102,7 @@ const Navbar = ({
             <Button asChild variant="outline" size="sm">
               <Link href={auth.login.url}>{auth.login.title}</Link>
             </Button>
-            <Button asChild size="sm">
+            <Button asChild className="!bg-red-500 hover:!bg-red-700 text-white" size="sm">
               <Link href={auth.signup.url}>{auth.signup.title}</Link>
             </Button>
           </div>
@@ -146,7 +146,7 @@ const Navbar = ({
                   </Accordion>
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
-                    <Button asChild variant="outline">
+                    <Button asChild variant="outline" className="!bg-transparent hover:!bg-slate-800">
                       <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
@@ -167,7 +167,8 @@ const renderMenuItem = (item: MenuItem) => {
   return (
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink asChild
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 
+        text-sm font-medium transition-colors hover:bg-muted dark:hover:bg-slate-800 hover:text-accent-foreground"
       >
         <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>

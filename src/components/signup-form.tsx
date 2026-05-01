@@ -37,7 +37,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   }
 
   return (
-    <Card {...props}>
+    <Card {...props} className="dark:bg-slate-950 border dark:border-slate-800">
       <CardHeader className="text-center">
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
@@ -110,11 +110,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             {/* Buttons */}
             <Field>
               <div className="flex flex-col gap-2">
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting} className="cursor-pointer">
                   {isSubmitting ? "Creating..." : "Create Account"}
                 </Button>
 
-                <Button variant="outline" type="button">
+                <Button className="bg-red-500 hover:bg-red-700 text-white cursor-pointer" type="button">
                   Sign up with Google
                 </Button>
               </div>
