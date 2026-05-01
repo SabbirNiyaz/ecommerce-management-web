@@ -75,7 +75,7 @@ const Navbar = ({
 }: NavbarProps) => {
   return (
     <section className={cn("py-0", className)}>
-      <div className="container mx-auto px-6 py-3 border-b-1 border-gray-200 dark:border-gray-700">
+      <div className="container dark:bg-slate-950 mx-auto px-6 py-3 border-b-1 border-gray-200 dark:border-gray-700">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">

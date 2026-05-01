@@ -1,7 +1,9 @@
-export default function Home() {
+import { Hero45 } from "@/components/hero45";
+
+export default function HomePage() {
     return (
         <div>
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
+            <Hero45 />
         </div>
     );
 }

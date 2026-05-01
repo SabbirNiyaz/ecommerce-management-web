@@ -1,5 +1,6 @@
 import * as z from "zod";
 
+//! Validation Schemas
 export const nameSchema = z
     .string()
     .min(2, "Name must be at least 2 characters long")
@@ -24,6 +25,7 @@ export const confirmPasswordSchema = z
 //     .optional()
 //     .default("seller");
 
+//! Signup Schema
 export const signupSchema = z
     .object({
         name: nameSchema,
@@ -38,3 +40,13 @@ export const signupSchema = z
     });
 
 export type SignupFormValues = z.infer<typeof signupSchema>;
+
+
+//! Login Schema
+export const loginSchema = z
+    .object({
+        email: emailSchema,
+        password: passwordSchema,
+    })
+
+export type LoginFormValues = z.infer<typeof loginSchema>;
