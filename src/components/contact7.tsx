@@ -47,7 +47,7 @@ const Contact7 = ({
             </h1>
             <p className="text-muted-foreground">{description}</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 mx-4 md:mx-0">
             <div className="rounded-xl bg-muted/50 p-8 dark:bg-slate-900 border shadow-sm">
               <Mail className="mb-4 size-5 text-muted-foreground dark:text-red-500" />
               <p className="mb-1 font-medium">{emailLabel}</p>

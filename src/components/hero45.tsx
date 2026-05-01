@@ -108,7 +108,7 @@ const Hero45 = (props: Props) => {
         </div>
 
         {/* HERO IMAGE */}
-        <div className="relative mx-auto max-w-6xl">
+        <div className="relative mx-4 md:mx-auto max-w-6xl">
           <img
             src={images[0].src}
             alt={images[0].alt}

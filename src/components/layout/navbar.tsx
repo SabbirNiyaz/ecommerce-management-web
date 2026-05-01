@@ -146,10 +146,10 @@ const Navbar = ({
                   </Accordion>
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
-                    <Button asChild variant="outline" className="!bg-transparent hover:!bg-slate-800">
+                    <Button asChild variant="outline">
                       <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
-                    <Button asChild>
+                    <Button asChild className="!bg-red-500 hover:!bg-red-700 text-white">
                       <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
                   </div>
