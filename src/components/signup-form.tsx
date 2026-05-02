@@ -67,7 +67,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
                 id="email"
-                placeholder="any@example.com"
+                placeholder="example@domain.com"
                 {...register("email")}
               />
               {errors.email && (
