@@ -23,12 +23,12 @@ export const confirmPasswordSchema = z
     .min(6, "Password must be at least 6 characters long")
     .max(100, "Password must be less than 100 characters long");
 
-export const roleSchema = z
-    .enum(["seller", "admin"], {
-        message: "Status must be either seller or admin",
-    })
-    .optional()
-    .default("seller");
+// export const roleSchema = z
+//     .enum(["seller", "admin"], {
+//         message: "Status must be either seller or admin",
+//     })
+//     .optional()
+//     .default("seller");
 
 //! Signup Schema
 export const signupSchema = z
