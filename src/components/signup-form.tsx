@@ -52,14 +52,14 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             {/* Name */}
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
               <Input
                 id="name"
                 placeholder="Enter your full name"
                 {...register("name")}
               />
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name.message}</p>
+              )}
             </Field>
 
             {/* Email */}
