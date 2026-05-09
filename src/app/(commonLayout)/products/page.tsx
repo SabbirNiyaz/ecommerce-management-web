@@ -45,11 +45,19 @@ interface Product {
     images: ProductImage[]
 }
 
+interface PaginatedResponse {
+    data: Product[]
+    total: number
+    page: number
+    lastPage: number
+}
+
 //! API Call
-const getProducts = async (): Promise<Product[]> => {
+const getProducts = async (page: number, limit: number = 16): Promise<PaginatedResponse> => {
     try {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
+            { params: { page, limit } }
         )
         return response.data
     } catch (error) {
@@ -66,13 +74,22 @@ export default function ProductPage() {
     const [error, setError] = useState<string | null>(null)
     const [search, setSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("All")
+    const [page, setPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const LIMIT = 16
 
     useEffect(() => {
-        getProducts()
-            .then(setProducts)
+        setLoading(true)
+        getProducts(page, LIMIT)
+            .then((res) => {
+                setProducts(res.data)
+                setLastPage(res.lastPage)
+                setTotal(res.total)
+            })
             .catch(() => setError("Failed to load products."))
             .finally(() => setLoading(false))
-    }, [])
+    }, [page])
 
     const categories = ["All", ...new Set(products.map((p) => p.category).filter(Boolean) as string[])]
 
@@ -139,7 +156,7 @@ export default function ProductPage() {
 
     return (
         <main className="max-w-6xl mx-auto px-2 py-4">
-            <h1 className="text-xl font-bold mb-6">Products ({filtered.length})</h1>
+            <h1 className="text-xl font-bold mb-6">Products ({total})</h1>
 
             {/* Search + Filter Bar */}
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
@@ -234,6 +251,53 @@ export default function ProductPage() {
                     </div>
                 ))}
             </div>
+
+            {/* Pagination */}
+            {lastPage > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-10">
+                    <button
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                        disabled={page === 1}
+                        className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700 transition-colors cursor-pointer"
+                    >
+                        ← Prev
+                    </button>
+
+                    {Array.from({ length: lastPage }, (_, i) => i + 1)
+                        .filter((p) => p === 1 || p === lastPage || Math.abs(p - page) <= 1)
+                        .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+                            if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push("...")
+                            acc.push(p)
+                            return acc
+                        }, [])
+                        .map((item, idx) =>
+                            item === "..." ? (
+                                <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">…</span>
+                            ) : (
+                                <button
+                                    key={item}
+                                    onClick={() => setPage(item as number)}
+                                    className={`px-3 py-1.5 text-sm rounded-md border transition-colors cursor-pointer ${page === item
+                                            ? "bg-indigo-600 text-white border-indigo-600"
+                                            : "hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700"
+                                        }`}
+                                >
+                                    {item}
+                                </button>
+                            )
+                        )}
+
+                    <button
+                        onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
+                        disabled={page === lastPage}
+                        className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700 transition-colors cursor-pointer"
+                    >
+                        Next →
+                    </button>
+                </div>
+            )}
         </main>
     )
 }
