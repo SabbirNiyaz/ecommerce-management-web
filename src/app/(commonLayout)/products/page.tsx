@@ -203,7 +203,7 @@ export default function ProductPage() {
                                 <img
                                     src={`${IMAGE_BASE_URL}${product.images[0].filename}`}
                                     alt={product.images[0].originalName}
-                                    className="w-full h-58 object-cover"
+                                    className="w-full h-80 md:h-58 object-cover"
                                 />
                             </Link>
                         ) : (
