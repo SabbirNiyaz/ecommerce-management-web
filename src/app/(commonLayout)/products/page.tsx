@@ -1,32 +1,8 @@
-// "use client"
-
-// import { useEffect } from "react"
-// import axios from "axios"
-
-// const getProducts = async () => {
-//     try {
-//         const response = await axios.get(
-//             `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`
-//         )
-//         console.log("Fetched products:", response.data)
-//         return response.data
-//     } catch (error) {
-//         console.error("Error fetching products:", error)
-//         throw error
-//     }
-// }
-
-// export default function Page() {
-//     useEffect(() => {
-//         getProducts()
-//     }, [])
-
-//     return <div>Check console</div>
-// }
 "use client"
 
 import { useEffect, useState } from "react"
 import axios from "axios"
+import Link from "next/link"
 
 interface ProductImage {
     id: number
@@ -62,6 +38,19 @@ const getProducts = async (page: number, limit: number = 16): Promise<PaginatedR
         return response.data
     } catch (error) {
         console.error("Error fetching products:", error)
+        throw error
+    }
+}
+
+//! Get Product by ID
+const getProductById = async (id: string): Promise<Product> => {
+    try {
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${id}`
+        )
+        return response.data
+    } catch (error) {
+        console.error(`Error fetching product with ID ${id}:`, error)
         throw error
     }
 }
@@ -207,23 +196,32 @@ export default function ProductPage() {
                 {filtered.map((product) => (
                     <div
                         key={product.id}
-                        className="border rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow dark:bg-gray-900"
+                        className="border rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow dark:bg-gray-900 cursor-pointer"
                     >
                         {product.images.length > 0 ? (
-                            <img
-                                src={`${IMAGE_BASE_URL}${product.images[0].filename}`}
-                                alt={product.images[0].originalName}
-                                className="w-full h-58 object-cover"
-                            />
+                            <Link href={`/products/${product.id}`}>
+                                <img
+                                    src={`${IMAGE_BASE_URL}${product.images[0].filename}`}
+                                    alt={product.images[0].originalName}
+                                    className="w-full h-58 object-cover"
+                                />
+                            </Link>
                         ) : (
                             <div className="w-full h-58 bg-gray-100 flex items-center justify-center text-gray-400 dark:bg-zinc-800">
-                                No image
+                                <Link href={`/products/${product.id}`}>
+                                    No image
+                                </Link>
                             </div>
                         )}
 
                         <div className="p-4 space-y-2">
                             <div className="flex items-center">
-                                <h2 className="font-semibold text-md">{product.name}</h2>
+                                <Link href={`/products/${product.id}`}>
+                                    <h2 className="font-semibold text-md cursor-pointer hover:text-red-500 hover:underline">
+                                        {product.name}
+                                    </h2>
+
+                                </Link>
                             </div>
 
                             <div>
@@ -235,7 +233,7 @@ export default function ProductPage() {
                             </div>
 
                             <div className="flex items-center justify-between pt-2">
-                                <span className="text-md font-bold">
+                                <span className="text-md font-bold text-red-600">
                                     ৳{parseFloat(product.price).toLocaleString()}
                                 </span>
                                 <span
@@ -279,8 +277,8 @@ export default function ProductPage() {
                                     key={item}
                                     onClick={() => setPage(item as number)}
                                     className={`px-3 py-1.5 text-sm rounded-md border transition-colors cursor-pointer ${page === item
-                                            ? "bg-indigo-600 text-white border-indigo-600"
-                                            : "hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700"
+                                        ? "bg-indigo-600 text-white border-indigo-600"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700"
                                         }`}
                                 >
                                     {item}
