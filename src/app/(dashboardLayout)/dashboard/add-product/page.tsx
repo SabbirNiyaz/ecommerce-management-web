@@ -1,7 +1,9 @@
-export default function AddProductPage(){
-    return(
+import { AddProductForm } from "@/components/addProduct-Form";
+
+export default function AddProductPage() {
+    return (
         <div>
-            <h1>Add Product</h1>
+            <AddProductForm />
         </div>
     )
 }
