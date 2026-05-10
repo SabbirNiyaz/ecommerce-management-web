@@ -17,10 +17,10 @@ import { Input } from "@/components/ui/input"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Textarea } from "./ui/textarea"
-import { ProductFormValues, productSchema } from "@/lib/validations/product.schema"
+import { productSchema, ProductFormValues } from "@/lib/validations/product.schema"
+import { Textarea } from "@/components/ui/textarea"
 
-export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) {
+export default function EditProductForm({ ...props }: React.ComponentProps<typeof Card>) {
 
     const {
         register,
@@ -37,9 +37,9 @@ export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) 
     }
 
     return (
-        <Card {...props} className="border w-2/3 mx-auto p-2 mt-0">
+        <Card className="border w-2/3 mx-auto p-2 mt-0">
             <CardHeader className="text-center">
-                <CardTitle>Add new Product</CardTitle>
+                <CardTitle>Update Product</CardTitle>
                 <CardDescription>
                     Enter your product information below
                 </CardDescription>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import axios from "axios"
+import Link from "next/link"
 
 type ProductStatus = "available" | "draft" | "out_of_stock"
 
@@ -184,10 +185,14 @@ export default function ManageProductsPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-2">
-                      <button className="px-8 py-2 border border-orange-200 text-yellow-500 rounded text-xs 
+
+                      <Link href={`/dashboard/manage-products/${p.id}`}>
+                        <button className="px-8 py-2 border border-orange-200 text-yellow-500 rounded text-xs 
                       hover:bg-yellow-400 hover:text-white transition cursor-pointer">
-                        Edit
-                      </button>
+                          Edit
+                        </button>
+                      </Link>
+
                       <button className="px-8 py-2 border border-red-200 text-red-500 rounded text-xs 
                       hover:bg-red-600 hover:text-white transition cursor-pointer">
                         Delete
@@ -231,11 +236,10 @@ export default function ManageProductsPage() {
                   <button
                     key={item}
                     onClick={() => setPage(item as number)}
-                    className={`px-3 py-1.5 text-sm rounded-md border transition-colors cursor-pointer ${
-                      page === item
-                        ? "bg-gray-900 text-white border-gray-900"
-                        : "hover:bg-gray-100"
-                    }`}
+                    className={`px-3 py-1.5 text-sm rounded-md border transition-colors cursor-pointer ${page === item
+                      ? "bg-gray-900 text-white border-gray-900"
+                      : "hover:bg-gray-100"
+                      }`}
                   >
                     {item}
                   </button>

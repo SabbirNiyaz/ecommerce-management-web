@@ -41,7 +41,7 @@ export const statusSchema = z
     .default("available");
 
 //! Add Product Schema
-export const addProductSchema = z.object({
+export const productSchema = z.object({
     category: categorySchema,
     product_name: productNameSchema,
     description: descriptionSchema,
@@ -50,4 +50,4 @@ export const addProductSchema = z.object({
     status: statusSchema.optional(),
 });
 
-export type AddProductFormValues = z.infer<typeof addProductSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
