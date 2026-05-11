@@ -41,9 +41,9 @@ const getProducts = async (page: number, limit: number = 15): Promise<PaginatedR
 
 const StatusBadge = ({ status }: { status: ProductStatus }) => {
   const styles: Record<ProductStatus, string> = {
-    available: "bg-green-50 text-green-700",
-    draft: "bg-gray-100 text-gray-500",
-    out_of_stock: "bg-red-50 text-red-600",
+    available: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400",
+    draft: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+    out_of_stock: "bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400",
   }
   const labels: Record<ProductStatus, string> = {
     available: "Available",
@@ -100,8 +100,8 @@ export default function ManageProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-sm text-gray-500 mb-0.5">Inventory</p>
-          <h1 className="text-2xl font-medium">Manage Products</h1>
+          <p className="text-sm text-gray-500 mb-0.5 dark:text-gray-400">Inventory</p>
+          <h1 className="text-2xl font-medium dark:text-gray-100">Manage Products</h1>
         </div>
       </div>
 
@@ -109,13 +109,13 @@ export default function ManageProductsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { label: "Total products", value: counts.total, color: "" },
-          { label: "Available", value: counts.available, color: "text-green-600" },
-          { label: "Out of stock", value: counts.out_of_stock, color: "text-red-600" },
-          { label: "Draft", value: counts.draft, color: "text-gray-400" },
+          { label: "Available", value: counts.available, color: "text-green-600 dark:text-green-400" },
+          { label: "Out of stock", value: counts.out_of_stock, color: "text-red-600 dark:text-red-400" },
+          { label: "Draft", value: counts.draft, color: "text-gray-400 dark:text-gray-500" },
         ].map((s) => (
-          <div key={s.label} className="bg-gray-50 rounded-lg p-4">
-            <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-            <p className={`text-2xl font-medium ${s.color}`}>{s.value}</p>
+          <div key={s.label} className="bg-gray-50 rounded-lg p-4 dark:bg-gray-900">
+            <p className="text-xs text-gray-500 mb-1 dark:text-gray-400">{s.label}</p>
+            <p className={`text-2xl font-medium dark:text-gray-100 ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
@@ -127,12 +127,12 @@ export default function ManageProductsPage() {
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300"
+          className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-gray-600"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300"
+          className="border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:focus:ring-gray-600"
         >
           <option value="">All status</option>
           <option value="available">Available</option>
@@ -142,14 +142,14 @@ export default function ManageProductsPage() {
       </div>
 
       {/* Table */}
-      <div className="border rounded-xl overflow-hidden">
+      <div className="border rounded-xl overflow-hidden dark:border-gray-800">
         <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="border-b bg-white">
+            <tr className="border-b bg-white dark:bg-gray-900 dark:border-gray-800">
               {["ID", "Product", "Stock", "Status", ""].map((h) => (
                 <th
                   key={h}
-                  className="text-left px-4 py-2.5 text-xs font-medium text-gray-400 uppercase tracking-wide last:text-right"
+                  className="text-left px-4 py-2.5 text-xs font-medium text-gray-400 uppercase tracking-wide last:text-right dark:text-gray-500"
                 >
                   {h}
                 </th>
@@ -159,13 +159,13 @@ export default function ManageProductsPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-15 text-center text-gray-400 text-sm">
+                <td colSpan={5} className="px-4 py-15 text-center text-gray-400 text-sm dark:text-gray-500">
                   Loading products…
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-15 text-center text-gray-400 text-sm">
+                <td colSpan={5} className="px-4 py-15 text-center text-gray-400 text-sm dark:text-gray-500">
                   No products found
                 </td>
               </tr>
@@ -173,11 +173,11 @@ export default function ManageProductsPage() {
               filtered.map((p) => (
                 <tr
                   key={p.id}
-                  className="border-b last:border-0 hover:bg-gray-50 transition"
+                  className="border-b last:border-0 hover:bg-gray-50 transition dark:border-gray-800 dark:hover:bg-gray-800"
                 >
-                  <td className="px-4 py-3 font-mono text-xs text-gray-400">{p.id}</td>
-                  <td className="px-4 py-3 font-medium">{p.name}</td>
-                  <td className={`px-4 py-3 ${p.stock === 0 ? "text-red-500" : ""}`}>
+                  <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-gray-500">{p.id}</td>
+                  <td className="px-4 py-3 font-medium dark:text-gray-200">{p.name}</td>
+                  <td className={`px-4 py-3 dark:text-gray-300 ${p.stock === 0 ? "text-red-500 dark:text-red-400" : ""}`}>
                     {p.stock} units
                   </td>
                   <td className="px-4 py-3">
@@ -188,13 +188,13 @@ export default function ManageProductsPage() {
 
                       <Link href={`/dashboard/manage-products/${p.id}`}>
                         <button className="px-8 py-2 border border-orange-200 text-yellow-500 rounded text-xs 
-                      hover:bg-yellow-400 hover:text-white transition cursor-pointer">
+                      hover:bg-yellow-400 hover:text-white transition cursor-pointer dark:border-orange-900 dark:text-yellow-400 dark:hover:bg-yellow-600">
                           Edit
                         </button>
                       </Link>
 
                       <button className="px-8 py-2 border border-red-200 text-red-500 rounded text-xs 
-                      hover:bg-red-600 hover:text-white transition cursor-pointer">
+                      hover:bg-red-600 hover:text-white transition cursor-pointer dark:border-red-900 dark:text-red-400 dark:hover:bg-red-700">
                         Delete
                       </button>
                     </div>
@@ -209,7 +209,7 @@ export default function ManageProductsPage() {
       {/* Pagination */}
       {lastPage > 1 && (
         <div className="flex items-center justify-between mt-4">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             Page {page} of {lastPage} · {total} products
           </p>
           <div className="flex items-center gap-2">
@@ -217,7 +217,7 @@ export default function ManageProductsPage() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
               className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed
-              hover:bg-gray-100 transition-colors cursor-pointer"
+              hover:bg-gray-100 transition-colors cursor-pointer dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               ← Prev
             </button>
@@ -231,14 +231,14 @@ export default function ManageProductsPage() {
               }, [])
               .map((item, idx) =>
                 item === "..." ? (
-                  <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">…</span>
+                  <span key={`ellipsis-${idx}`} className="px-2 text-gray-400 dark:text-gray-500">…</span>
                 ) : (
                   <button
                     key={item}
                     onClick={() => setPage(item as number)}
                     className={`px-3 py-1.5 text-sm rounded-md border transition-colors cursor-pointer ${page === item
-                      ? "bg-gray-900 text-white border-gray-900"
-                      : "hover:bg-gray-100"
+                      ? "bg-gray-900 text-white border-gray-900 dark:bg-gray-100 dark:text-gray-900 dark:border-gray-100"
+                      : "hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                       }`}
                   >
                     {item}
@@ -250,7 +250,7 @@ export default function ManageProductsPage() {
               onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
               disabled={page === lastPage}
               className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed
-              hover:bg-gray-100 transition-colors cursor-pointer"
+              hover:bg-gray-100 transition-colors cursor-pointer dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               Next →
             </button>

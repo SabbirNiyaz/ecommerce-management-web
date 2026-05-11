@@ -149,9 +149,9 @@ export default function EditProductForm({ ...props }: React.ComponentProps<typeo
                         {/* Buttons */}
                         <Field>
                             <div className="flex justify-center p-2">
-                                <Button type="submit" disabled={isSubmitting} className="px-8 py-4 bg-red-500 
-                                hover:bg-red-600 cursor-pointer">
-                                    {isSubmitting ? "Adding..." : "Add"}
+                                <Button type="submit" disabled={isSubmitting} className="px-8 py-4 bg-blue-500 
+                                hover:bg-blue-600 cursor-pointer">
+                                    {isSubmitting ? "Updating..." : "Update"}
                                 </Button>
                             </div>
                         </Field>
