@@ -11,6 +11,7 @@ interface Product {
   name: string
   stock: number
   status: ProductStatus
+  category: string
 }
 
 interface PaginatedResponse {
@@ -63,6 +64,7 @@ export default function ManageProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -80,14 +82,23 @@ export default function ManageProductsPage() {
       .finally(() => setLoading(false))
   }, [page])
 
+  // Product Category
+  const categories = ["All Categories", ...new Set(products.map((p) => p.category).filter(Boolean) as string[])]
+
+  // Search
+  const q = search.toLowerCase()
+
   const filtered = products.filter((p) => {
     const matchQ =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.id.toLowerCase().includes(search.toLowerCase())
+      p.name.toLowerCase().includes(q) ||
+      String(p.id).toLowerCase().includes(q)
     const matchS = !statusFilter || p.status === statusFilter
-    return matchQ && matchS
+    const matchesCategory =
+      selectedCategory === "All Categories" || p.category === selectedCategory
+    return matchQ && matchS && matchesCategory
   })
 
+  // Status 
   const counts = {
     total,
     available: products.filter((p) => p.status === "available").length,
@@ -129,6 +140,21 @@ export default function ManageProductsPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-gray-600"
         />
+
+        {/* Category Filter */}
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:focus:ring-gray-600"
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
+        {/* Status Filter */}
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -146,7 +172,7 @@ export default function ManageProductsPage() {
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b bg-white dark:bg-gray-900 dark:border-gray-800">
-              {["ID", "Product", "Stock", "Status", ""].map((h) => (
+              {["ID", "Product", "Category", "Stock", "Status", ""].map((h) => (
                 <th
                   key={h}
                   className="text-left px-4 py-2.5 text-xs font-medium text-gray-400 uppercase tracking-wide last:text-right dark:text-gray-500"
@@ -177,6 +203,7 @@ export default function ManageProductsPage() {
                 >
                   <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-gray-500">{p.id}</td>
                   <td className="px-4 py-3 font-medium dark:text-gray-200">{p.name}</td>
+                  <td className="px-4 py-3 font-medium dark:text-gray-200">{p.category}</td>
                   <td className={`px-4 py-3 dark:text-gray-300 ${p.stock === 0 ? "text-red-500 dark:text-red-400" : ""}`}>
                     {p.stock} units
                   </td>
