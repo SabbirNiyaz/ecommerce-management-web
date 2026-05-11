@@ -149,8 +149,8 @@ export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) 
                         {/* Buttons */}
                         <Field>
                             <div className="flex justify-center p-2">
-                                <Button type="submit" disabled={isSubmitting} className="px-8 py-4 bg-red-500 
-                                hover:bg-red-600 cursor-pointer">
+                                <Button type="submit" disabled={isSubmitting} className="px-8 py-4 bg-blue-600 hover:bg-blue-700
+                                 cursor-pointer">
                                     {isSubmitting ? "Adding..." : "Add"}
                                 </Button>
                             </div>

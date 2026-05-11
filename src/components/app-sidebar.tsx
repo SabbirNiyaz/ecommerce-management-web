@@ -33,6 +33,10 @@ const data = {
       title: "Add Product",
       url: "/dashboard/add-product",
     },
+    {
+      title: "Create Profile",
+      url: "/dashboard/create-profile",
+    },
   ],
 }
 

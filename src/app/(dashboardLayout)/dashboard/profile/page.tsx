@@ -136,8 +136,11 @@ export default function ProfilePage() {
                         </div>
                     </div>
                     <div className="flex justify-end mt-8">
-                        <button className="bg-blue-600 text-white px-4 py-1 rounded-sm hover:bg-blue-700
-                        cursor-pointer">Edit</button>
+                        <button
+                            className="px-8 py-2 border border-orange-200 text-yellow-500 rounded text-xs 
+                            hover:bg-yellow-400 hover:text-white transition cursor-pointer"
+                        >Edit
+                        </button>
                     </div>
                 </div>
             </div>
