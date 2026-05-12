@@ -13,6 +13,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { useAuth } from "@/hooks/useAuth"
+import { useState, useEffect } from "react"
 
 // This is sample data.
 const data = {
@@ -41,6 +43,18 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const user = useAuth();
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const displayName = mounted ? (user?.name ?? "Guest") : "Guest";
+  const displayEmail = mounted ? (user?.email ?? "") : "";
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -52,8 +66,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   S
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">name</span>
-                  <span className="">gmail</span>
+                  <span className="font-medium">{displayName}</span>
+                  <span className="">{displayEmail}</span>
                 </div>
               </Link>
             </SidebarMenuButton>

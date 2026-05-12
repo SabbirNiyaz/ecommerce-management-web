@@ -50,6 +50,9 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       }
       setStatus({ type: 'success', message: response.data.message });
 
+      // Set JWT Token data on localStorage
+      localStorage.setItem("token", response.data.data.token)
+
       // redirect to dashboard
       router.push('/dashboard')
 
