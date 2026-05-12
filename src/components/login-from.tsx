@@ -19,8 +19,13 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, LoginFormValues } from "@/lib/validations/auth.schema"
+import axios from "axios"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+
+  const router = useRouter();
 
   const {
     register,
@@ -30,15 +35,46 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     resolver: zodResolver(loginSchema),
   })
 
+  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
   const onSubmit = async (data: LoginFormValues) => {
     console.log("Login Form Data:", data)
 
-    // TODO: Implement actual signin logic here 
+    // TODO: API Call
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/signin`, data)
+      console.log("Success:", response.data)
+      if (response.data.success === false) {
+        setStatus({ type: 'error', message: response.data.message });
+        return;
+      }
+      setStatus({ type: 'success', message: response.data.message });
+
+      // redirect to dashboard
+      router.push('/dashboard')
+
+    } catch (err: any) {
+      console.log("Error:", err.response?.data || err.message)
+      setStatus({ type: 'error', message: err.response?.data?.message || 'Something went wrong' });
+    }
   }
 
   return (
     <Card {...props} className="dark:bg-slate-950 border dark:border-slate-800">
       <CardHeader className="text-center">
+
+        {/* Dynamic status message */}
+        {status && (
+          <div
+            className={`text-sm px-4 py-2 rounded-md mb-2 ${status.type === 'success'
+              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+              : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+              }`}
+          >
+            {status.message}
+          </div>
+        )}
+
         <CardTitle>Sign in to your account</CardTitle>
         <CardDescription>
           Enter your information below to sign in

@@ -19,26 +19,64 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signupSchema, SignupFormValues } from "@/lib/validations/auth.schema"
+import axios from "axios"
+import { useState } from "react"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    }
   })
 
-  const onSubmit = async (data: SignupFormValues) => {
-    console.log("Form Data:", data)
+  // Add state for the response message
+  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-    // TODO: Implement actual signup logic here 
+  const onSubmit = async (data: SignupFormValues) => {
+    // console.log("Form Data:", data)
+
+    // Send data without confirmPassword
+    const { confirmPassword, ...payload } = data;
+
+    // TODO: Call API
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/signup`, payload)
+      // console.log("Success:", response.data)
+      setStatus({ type: 'success', message: response.data.message });
+      reset();
+
+    } catch (err: any) {
+      console.log("Error:", err.response?.data || err.message)
+      setStatus({ type: 'error', message: err.response?.data?.message || 'Something went wrong' });
+    }
   }
 
   return (
     <Card {...props} className="dark:bg-slate-950 border dark:border-slate-800">
       <CardHeader className="text-center">
+
+        {/* Dynamic status message */}
+        {status && (
+          <div
+            className={`text-sm px-4 py-2 rounded-md mb-2 ${status.type === 'success'
+              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+              : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+              }`}
+          >
+            {status.message}
+          </div>
+        )}
+
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Enter your information below to create your account
