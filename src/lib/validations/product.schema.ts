@@ -22,13 +22,13 @@ export const descriptionSchema = z
 
 export const priceSchema = z
     .number({
-        error: "Price is required",
+        error: "Price is required and it's must be number",
     })
     .min(1, "Price must be greater than 0");
 
 export const stockSchema = z
     .number({
-        error: "Stock is required",
+        error: "Stock is required and it's must be number",
     })
     .int("Stock must be a whole number")
     .min(0, "Stock cannot be negative")
@@ -43,7 +43,7 @@ export const statusSchema = z
 //! Add Product Schema
 export const productSchema = z.object({
     category: categorySchema,
-    product_name: productNameSchema,
+    name: productNameSchema,
     description: descriptionSchema,
     price: priceSchema,
     stock: stockSchema.optional(),

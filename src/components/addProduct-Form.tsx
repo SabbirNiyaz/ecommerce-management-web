@@ -19,27 +19,68 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from "./ui/textarea"
 import { ProductFormValues, productSchema } from "@/lib/validations/product.schema"
+import axios from "axios"
+import { useState } from "react"
 
 export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) {
 
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
+        defaultValues: {
+            category: '',
+            name: '',
+            description: '',
+            price: 0,
+            stock: 0,
+        }
     })
 
-    const onSubmit = async (data: ProductFormValues) => {
-        console.log("Form Data:", data)
+    const [isSuccess, setIsSuccess] = useState(false)
 
-        // TODO: Implement actual addProduct logic here 
+    const onSubmit = async (data: ProductFormValues) => {
+        // console.log("Form Data:", data)
+
+        // Get token from localStorage
+        const token = localStorage.getItem("token")
+
+        // TODO: API Call
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
+                data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            )
+            // console.log("Success: ", response.data)
+
+            setIsSuccess(true);
+            setTimeout(() => setIsSuccess(false), 3000)
+
+            reset();
+
+        } catch (err: any) {
+            console.log("Error:", err.response?.data || err.message)
+        }
     }
 
     return (
         <Card {...props} className="border w-2/3 mx-auto p-2 mt-0">
             <CardHeader className="text-center">
-                <CardTitle>Add new Product</CardTitle>
+
+                {
+                    isSuccess && <p className="text-sm mt-2 px-4 py-3 rounded-md mb-2 bg-green-100 text-green-700 
+                    dark:bg-green-900/30 dark:text-green-400">
+                        Product added successfully
+                    </p>
+                }
+
+                <CardTitle>Add Product</CardTitle>
                 <CardDescription>
                     Enter your product information below
                 </CardDescription>
@@ -66,15 +107,15 @@ export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) 
 
                         {/* Product Name */}
                         <Field>
-                            <FieldLabel htmlFor="product_name">Product Name</FieldLabel>
+                            <FieldLabel htmlFor="name">Product Name</FieldLabel>
                             <Input
-                                id="product_name"
+                                id="name"
                                 placeholder="Enter product name"
-                                {...register("product_name")}
+                                {...register("name")}
                             />
-                            {errors.product_name && (
+                            {errors.name && (
                                 <p className="text-sm text-red-500">
-                                    {errors.product_name.message}
+                                    {errors.name.message}
                                 </p>
                             )}
                         </Field>
@@ -102,7 +143,7 @@ export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) 
                                 id="price"
                                 type="number"
                                 placeholder="Enter price"
-                                {...register("price")}
+                                {...register("price", { valueAsNumber: true })}
                             />
                             {errors.price && (
                                 <p className="text-sm text-red-500">
@@ -118,7 +159,7 @@ export function AddProductForm({ ...props }: React.ComponentProps<typeof Card>) 
                                 id="stock"
                                 type="number"
                                 placeholder="Enter stock quantity"
-                                {...register("stock")}
+                                {...register("stock", { valueAsNumber: true })}
                             />
                             {errors.stock && (
                                 <p className="text-sm text-red-500">

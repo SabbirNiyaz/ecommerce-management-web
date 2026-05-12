@@ -33,10 +33,22 @@ export default function ProfilePage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+
+        // Get token from localStorage
+        const token = localStorage.getItem("token")
+
+        if (!token) {
+            setError("No token found");
+            setLoading(false);
+            return;
+        }
+
+        console.log("Token: ", token)
+
         axios
             .get<Profile>(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/profile`, {
                 headers: {
-                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+                    Authorization: `Bearer ${token}`
                 }
             })
             .then((res) => setProfile(res.data))
@@ -71,7 +83,7 @@ export default function ProfilePage() {
                     <div className="absolute -bottom-10 left-8">
                         {profileImage && !profileImage.includes("example.com") ? (
                             <img
-                                src={profileImage}
+                                src={profileImage? profileImage : "No Image"}
                                 alt={user.name}
                                 className="w-20 h-20 rounded-full border-4 border-white object-cover shadow-sm dark:border-gray-900"
                             />
