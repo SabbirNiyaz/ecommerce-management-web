@@ -1,4 +1,4 @@
-import { CreateProfileForm } from "@/components/create-profile";
+import CreateProfileForm from "@/components/create-profile";
 
 export default function CreateProfilePage() {
     return (

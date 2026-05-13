@@ -53,9 +53,10 @@ export default function ProfilePage() {
                         headers: { Authorization: `Bearer ${token}` },
                     }
                 );
+                console.log("Profile response: ", response.data.data )
                 setProfile(response.data);
             } catch (err: any) {
-                // 404 = no profile yet, that's okay
+                // 404 = no profile yet
                 if (err?.response?.status !== 404) {
                     toast.error("Failed to load profile");
                     console.error("Failed to fetch profile:", err);
@@ -189,11 +190,22 @@ export default function ProfilePage() {
 
                     {/* Action button */}
                     <div className="flex justify-end mt-8">
-                        <Link href={`/dashboard/profile/${displayId}`}>
-                            <button className="px-8 py-2 border bg-blue-600 text-white rounded text-xs hover:bg-blue-700 hover:text-white transition cursor-pointer dark:border-orange-900 dark:text-yellow-400 dark:hover:bg-yellow-600">
-                                {hasProfile ? "Edit Profile" : "Create Profile"}
-                            </button>
-                        </Link>
+                        {
+                            !hasProfile &&
+                            <Link href={`/dashboard/create-profile`}>
+                                <button className="px-8 py-2 border bg-blue-600 text-white rounded text-xs hover:bg-blue-700 hover:text-white transition cursor-pointer dark:border-orange-900 dark:text-yellow-400 dark:hover:bg-yellow-600">
+                                    Create
+                                </button>
+                            </Link>
+                        }
+                        {
+                            hasProfile &&
+                            <Link href={`/dashboard/profile/${displayId}`}>
+                                <button className="px-8 py-2 border bg-blue-600 text-white rounded text-xs hover:bg-blue-700 hover:text-white transition cursor-pointer dark:border-orange-900 dark:text-yellow-400 dark:hover:bg-yellow-600">
+                                    Edit
+                                </button>
+                            </Link>
+                        }
                     </div>
                 </div>
             </div>

@@ -19,18 +19,17 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ProfileFormValues, profileSchema } from "@/lib/validations/profile.schema"
 import { Textarea } from "@/components/ui/textarea"
+import { useEffect } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 
-
-export default function CreateProfileForm({
+export default function UpdateProfileForm({
     searchParams,
     ...props
 }: React.ComponentProps<typeof Card> & { searchParams?: unknown }) {
 
-    // Hooks
-    const router = useRouter()
+    const router = useRouter();
 
     const {
         register,
@@ -48,13 +47,49 @@ export default function CreateProfileForm({
         }
     })
 
-    // localStorage guard for SSR safety
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+    const token = localStorage.getItem("token")
+
+    // Fetch current form data
+    useEffect(() => {
+        const fetchProfile = async () => {
+
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/profile`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+
+                const profile = response.data
+
+                reset({
+                    profileImage: profile.profileImage || '',
+                    bio: profile.bio || '',
+                    address: profile.address || '',
+                    phone: profile.phone || '',
+                    isActive: Boolean(profile.isActive),
+
+                })
+
+            } catch (err: any) {
+                console.log("Error fetching profile:", err.message)
+            }
+        }
+
+        fetchProfile()
+    }, [reset])
+
 
     const onSubmit = async (data: ProfileFormValues) => {
+        // console.log("Form Data:", data)
+
+        // TODO: API Call
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/profile`,
+            const response = await axios.put(
+                `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/profile-update`,
                 data,
                 {
                     headers: {
@@ -63,21 +98,26 @@ export default function CreateProfileForm({
                 }
             )
 
+            // console.log("Updated:", response.data)
+
             if (response.data.success === true) {
                 toast.success("Profile updated successfully!")
                 router.push("/dashboard/profile")
             }
 
         } catch (err: any) {
+            // console.log("Update Error:", err.message)
+            // Error toast
             toast.error(
-                err?.response?.data?.message || "Error to create profile"
+                err?.response?.data?.message || "No changes detected"
             )
         }
     }
+
     return (
         <Card {...props} className="border w-2/3 mx-auto p-2 mt-0">
             <CardHeader className="text-center">
-                <CardTitle>Create Profile</CardTitle>
+                <CardTitle>Update Profile</CardTitle>
                 <CardDescription>
                     Enter your profile information below
                 </CardDescription>
@@ -175,7 +215,7 @@ export default function CreateProfileForm({
                             <div className="flex justify-center p-2">
                                 <Button type="submit" disabled={isSubmitting} className="px-8 py-4 bg-blue-600 
                                 hover:bg-blue-700 cursor-pointer">
-                                    {isSubmitting ? "Creating..." : "Create"}
+                                    {isSubmitting ? "Updating..." : "Update"}
                                 </Button>
                             </div>
                         </Field>
