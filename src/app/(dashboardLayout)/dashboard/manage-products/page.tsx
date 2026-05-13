@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import Link from "next/link"
 
+import toast from "react-hot-toast"
+
 type ProductStatus = "available" | "draft" | "out_of_stock"
 
 interface Product {
@@ -71,6 +73,11 @@ export default function ManageProductsPage() {
   const [total, setTotal] = useState(0)
   const LIMIT = 15
 
+  // Delete Model State
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
   useEffect(() => {
     setLoading(true)
     getProducts(page, LIMIT)
@@ -81,6 +88,50 @@ export default function ManageProductsPage() {
       })
       .finally(() => setLoading(false))
   }, [page])
+
+  // Delete Product
+  const handleDelete = async () => {
+    if (!selectedProductId) return
+
+    // Get token from localStorage
+    const token = localStorage.getItem("token")
+
+    try {
+      setDeleting(true)
+
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${selectedProductId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      // Remove product form UI
+      setProducts((prev) =>
+        prev.filter((p) => p.id !== selectedProductId))
+
+      // Update total
+      setTotal((prev) => prev - 1)
+
+      // Close model
+      setShowDeleteModal(false)
+      setSelectedProductId(null)
+
+      // Success toast
+      toast.success("Product deleted successfully!")
+
+    } catch (err: any) {
+      // console.log("Delete failed", err)
+      // Error toast
+      toast.error(
+        err?.response?.data?.message || "Failed to delete product"
+      )
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   // Product Category
   const categories = ["All Categories", ...new Set(products.map((p) => p.category).filter(Boolean) as string[])]
@@ -220,7 +271,13 @@ export default function ManageProductsPage() {
                         </button>
                       </Link>
 
-                      <button className="px-8 py-2 border border-red-200 text-red-500 rounded text-xs 
+                      <button
+                        onClick={() => {
+                          setSelectedProductId(p.id)
+                          setShowDeleteModal(true)
+                        }}
+
+                        className="px-8 py-2 border border-red-200 text-red-500 rounded text-xs 
                       hover:bg-red-600 hover:text-white transition cursor-pointer dark:border-red-900 dark:text-red-400 dark:hover:bg-red-700">
                         Delete
                       </button>
@@ -284,6 +341,51 @@ export default function ManageProductsPage() {
           </div>
         </div>
       )}
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-xl">
+
+            <h2 className="text-lg font-semibold mb-2 dark:text-white">
+              Delete Product
+            </h2>
+
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to delete this product?
+            </p>
+
+            <div className="flex justify-end gap-3">
+
+              {/* Cancel */}
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false)
+                  setSelectedProductId(null)
+                }}
+                className="px-4 py-2 rounded-md border text-sm 
+                hover:bg-gray-100 dark:border-gray-700 
+                dark:text-gray-300 dark:hover:bg-gray-800"
+              >
+                No
+              </button>
+
+              {/* Confirm Delete */}
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="px-4 py-2 rounded-md bg-red-600 
+                text-white text-sm hover:bg-red-700 
+                disabled:opacity-50"
+              >
+                {deleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

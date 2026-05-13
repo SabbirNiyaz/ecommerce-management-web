@@ -1,6 +1,9 @@
 import * as z from "zod";
 
-//! Validation Schemas
+//! Validation schema
+const noLeadingZeros = z
+    .string()
+    .regex(/^(0|[1-9]\d*)$/, "Must not have leading zeros");
 
 export const categorySchema = z
     .string()
@@ -20,19 +23,23 @@ export const descriptionSchema = z
     .max(255, "Description must be less than 255 characters long")
     .trim();
 
-export const priceSchema = z
-    .number({
-        error: "Price is required and it's must be number",
-    })
-    .min(1, "Price must be greater than 0");
+export const priceSchema = noLeadingZeros
+    .transform(Number)
+    .pipe(
+        z.number()
+            .min(1, "Price must be greater than 0")
+            .max(99_999_999.99, "Price must be less than 99,999,999.99")
+    );
 
-export const stockSchema = z
-    .number({
-        error: "Stock is required and it's must be number",
-    })
-    .int("Stock must be a whole number")
-    .min(0, "Stock cannot be negative")
-    .default(1);
+export const stockSchema = noLeadingZeros
+    .default("1")
+    .transform(Number)
+    .pipe(
+        z.number()
+            .int("Stock must be a whole number")
+            .min(0, "Stock cannot be negative")
+            .max(2_147_483_647, "Stock must be less than 2,147,483,647")
+    );
 
 export const statusSchema = z
     .enum(["available", "out_of_stock"], {
@@ -40,7 +47,6 @@ export const statusSchema = z
     })
     .default("available");
 
-//! Add Product Schema
 export const productSchema = z.object({
     category: categorySchema,
     name: productNameSchema,
@@ -50,4 +56,5 @@ export const productSchema = z.object({
     status: statusSchema.optional(),
 });
 
+export type ProductFormInput = z.input<typeof productSchema>;
 export type ProductFormValues = z.infer<typeof productSchema>;
