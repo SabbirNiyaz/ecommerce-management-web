@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 
 interface JwtPayload {
+    id: number;
     name: string;
     email: string;
+    role: string;
     // add other fields token contains
 }
 
