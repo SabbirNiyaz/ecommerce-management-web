@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import { LogoutButton } from "@/components/logout-button"
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -18,21 +19,24 @@ export default function DashboardPage({ children }: { children: React.ReactNode 
             <AppSidebar />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 border-b">
-                    <div className="flex items-center gap-2 px-3">
-                        <SidebarTrigger />
-                        <Separator
-                            orientation="vertical"
-                            className="mr-2 data-vertical:h-4 data-vertical:self-auto"
-                        />
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink>
-                                    <span className="font-bold text-gray-500">Seller Dashboard</span> 
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
+                    <div className="flex items center justify-between w-full px-3">
+                        <div className="flex items-center gap-2 px-3">
+                            <SidebarTrigger />
+                            <Separator
+                                orientation="vertical"
+                                className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+                            />
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem className="hidden md:block">
+                                        <BreadcrumbLink>
+                                            <span className="font-bold text-gray-500">Seller Dashboard</span>
+                                        </BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                </BreadcrumbList>
+                            </Breadcrumb>
+                        </div>
+                        <LogoutButton />
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4">
