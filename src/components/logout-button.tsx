@@ -7,6 +7,8 @@ export function LogoutButton() {
     const router = useRouter()
 
     const handleLogout = () => {
+        if (typeof window === "undefined") return
+
         // Clear cookie
         document.cookie = "accessToken=; path=/; max-age=0"
 

@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ProfileFormValues, profileSchema } from "@/lib/validations/profile.schema"
 import { Textarea } from "@/components/ui/textarea"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
@@ -47,7 +47,14 @@ export default function UpdateProfileForm({
         }
     })
 
-    const token = localStorage.getItem("token")
+    // 1. Add state for token 
+    const [token, setToken] = useState<string | null>(null)
+
+    // 2. Add this useEffect 
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token")
+        setToken(storedToken)
+    }, [])
 
     // Fetch current form data
     useEffect(() => {
